@@ -1,0 +1,59 @@
+<%- include("../../partials/header", { button: { name: "Initiate Transfer", link: "#", icon: "fas fa-random" } }) %>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- Transfers Table -->
+    <div class="card">
+      <div class="card-body">
+        <table id="transfersTable" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Transfer ID</th>
+              <th>Asset Tag</th>
+              <th>Asset Name</th>
+              <th>From Location</th>
+              <th>To Location</th>
+              <th>Initiated By</th>
+              <th>Status</th>
+              <th>Transfer Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample Row -->
+            <tr>
+              <td>TRF-2025-001</td>
+              <td>UB-2025-001</td>
+              <td>Lenovo ThinkPad T14</td>
+              <td>Belmopan - Lab B</td>
+              <td>PG Campus - Admin Office</td>
+              <td>Jane Smith</td>
+              <td><span class="badge badge-info">In Transit</span></td>
+              <td>2025-04-05</td>
+              <td>
+                <a href="#" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
+                <a href="#" class="btn btn-sm btn-danger" title="Cancel"><i class="fas fa-times"></i></a>
+              </td>
+            </tr>
+            <!-- Add more rows dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<script>
+  window.onload = function () {
+    $('#transfersTable').DataTable({
+      responsive: true,
+      lengthChange: true,
+      autoWidth: false
+    });
+  };
+</script>
+
+<%- include("../../partials/footer") %>

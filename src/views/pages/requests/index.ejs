@@ -1,0 +1,57 @@
+<%- include("../../partials/header", { button: { name: "Submit Request", link: "#", icon: "fas fa-plus-circle" } }) %>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- Asset Requests Table -->
+    <div class="card">
+      <div class="card-body">
+        <table id="requestsTable" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Request ID</th>
+              <th>Type</th>
+              <th>Requested By</th>
+              <th>Asset Name</th>
+              <th>Reason</th>
+              <th>Status</th>
+              <th>Requested On</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample Row -->
+            <tr>
+              <td>REQ-0001</td>
+              <td>Replacement</td>
+              <td>John Doe</td>
+              <td>Dell OptiPlex 7080</td>
+              <td>Frequent crashes and freezing</td>
+              <td><span class="badge badge-warning">Pending</span></td>
+              <td>2025-04-06</td>
+              <td>
+                <a href="#" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
+                <a href="#" class="btn btn-sm btn-danger" title="Cancel"><i class="fas fa-times"></i></a>
+              </td>
+            </tr>
+            <!-- Add more rows dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<script>
+  window.onload = function () {
+    $('#requestsTable').DataTable({
+      responsive: true,
+      lengthChange: true,
+      autoWidth: false
+    });
+  };
+</script>
+
+<%- include("../../partials/footer") %>

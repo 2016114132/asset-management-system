@@ -1,0 +1,50 @@
+<%- include("../../partials/header", { button: { name: "Add New Campus", link: "#", icon: "fas fa-university" } }) %>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- Campuses Table -->
+    <div class="card">
+      <div class="card-body">
+        <table id="campusesTable" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Campus Name</th>
+              <th>Location</th>
+              <th>Total Assets</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample Row -->
+            <tr>
+              <td>Belmopan Campus</td>
+              <td>Belmopan</td>
+              <td>248</td>
+              <td>
+                <a href="#" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
+                <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                <a href="#" class="btn btn-sm btn-danger" title="Delete"><i class="fas fa-trash-alt"></i></a>
+              </td>
+            </tr>
+            <!-- Add more rows dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<script>
+  window.onload = function () {
+    $('#campusesTable').DataTable({
+      responsive: true,
+      lengthChange: true,
+      autoWidth: false
+    });
+  };
+</script>
+
+<%- include("../../partials/footer") %>

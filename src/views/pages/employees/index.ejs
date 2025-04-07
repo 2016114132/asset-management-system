@@ -1,0 +1,56 @@
+<%- include("../../partials/header", { button: { name: "Add New Employee", link: "#", icon: "fas fa-user-plus" } }) %>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <!-- Employees Table -->
+    <div class="card">
+      <div class="card-body">
+        <table id="employeesTable" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Employee ID</th>
+              <th>Full Name</th>
+              <th>Email</th>
+              <th>Department</th>
+              <th>Role(s)</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Sample Row -->
+            <tr>
+              <td>EMP-1001</td>
+              <td>Dr. Anna Martinez</td>
+              <td>anna.martinez@ub.edu.bz</td>
+              <td>Faculty of Science & Technology</td>
+              <td><span class="badge badge-primary">Faculty</span></td>
+              <td><span class="badge badge-success">Active</span></td>
+              <td>
+                <a href="#" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
+                <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                <a href="#" class="btn btn-sm btn-secondary" title="Deactivate"><i class="fas fa-user-slash"></i></a>
+              </td>
+            </tr>
+            <!-- Add more rows dynamically -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<script>
+  window.onload = function () {
+    $('#employeesTable').DataTable({
+      responsive: true,
+      lengthChange: true,
+      autoWidth: false
+    });
+  };
+</script>
+
+<%- include("../../partials/footer") %>

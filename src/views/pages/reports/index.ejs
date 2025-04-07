@@ -1,0 +1,161 @@
+<%- include("../../partials/header") %>
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+
+    <!-- Filters and Report Controls -->
+    <div class="card">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-chart-bar"></i> Generate Report</h3>
+      </div>
+      <div class="card-body">
+        <form id="reportForm">
+          <div class="row">
+            <div class="col-md-4">
+              <div class="form-group mb-0">
+                <label for="reportType">Report Type</label>
+                <select class="form-control" id="reportType" name="reportType" required>
+                  <option value="">-- Select --</option>
+                  <option value="all-assets">All Assets</option>
+                  <option value="assigned-assets">Assigned Assets by Employee</option>
+                  <option value="transfers">Asset Transfers</option>
+                  <option value="requests">Asset Requests</option>
+                  <option value="disposals">Assets for Disposal</option>
+                  <option value="summary">Summary Report</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Optional: Date Range Filter -->
+            <div class="col-md-3">
+              <div class="form-group mb-0">
+                <label for="fromDate">From Date</label>
+                <input type="date" class="form-control" id="fromDate" name="fromDate">
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="form-group mb-0">
+                <label for="toDate">To Date</label>
+                <input type="date" class="form-control" id="toDate" name="toDate">
+              </div>
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+              <button type="submit" class="btn btn-primary btn-block">
+                <i class="fas fa-file-alt"></i> Generate
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Report Results Table -->
+    <div class="card d-none" id="reportResults">
+      <div class="card-header">
+        <h3 class="card-title"><i class="fas fa-table"></i> Report Results</h3>
+        
+      </div>
+      <div class="card-body">
+        <table id="reportTable" class="table table-bordered table-striped">
+          <thead>
+            <!-- Dynamically generated based on report type -->
+          </thead>
+          <tbody>
+            <!-- Populated via JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /.container-fluid -->
+</section>
+<!-- /.content -->
+
+<script>
+  window.onload = function () {
+    const form = document.getElementById('reportForm');
+    const resultsCard = document.getElementById('reportResults');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Simulated example: show table and load sample data
+      resultsCard.classList.remove('d-none');
+
+      // Replace this with actual data loading logic (AJAX, API, etc.)
+      const thead = document.querySelector('#reportTable thead');
+      const tbody = document.querySelector('#reportTable tbody');
+
+      thead.innerHTML = `
+        <tr>
+          <th>Asset Tag</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Condition</th>
+        </tr>
+      `;
+      tbody.innerHTML = `
+        <tr>
+          <td>UB-2025-001</td>
+          <td>Dell Latitude 5410</td>
+          <td>Laptop</td>
+          <td>Good</td>
+        </tr>
+        <tr>
+          <td>UB-2025-022</td>
+          <td>HP LaserJet</td>
+          <td>Printer</td>
+          <td>Fair</td>
+        </tr>
+      `;
+
+      // Initialize DataTable if needed
+      $('#reportTable').DataTable({
+        destroy: true, // allow reinitialization
+        responsive: true,
+        lengthChange: true,
+        autoWidth: false,
+        buttons: [
+          {
+            extend: 'pdfHtml5',
+            text: 'Export to PDF',
+            orientation: 'landscape',         // More horizontal space
+            pageSize: 'A4',                   // Or 'LEGAL' for more rows
+            exportOptions: {
+              columns: ':visible'
+            },
+            customize: function (doc) {
+              doc.styles.tableHeader = {
+                bold: true,
+                fontSize: 11,
+                color: 'black',
+                fillColor: '#eeeeee',
+                alignment: 'center'
+              };
+              doc.content[1].table.widths = ['*', '*', '*', '*']; // Auto stretch to fit page
+              doc.defaultStyle.fontSize = 10;
+              doc.styles.title = {
+                fontSize: 16,
+                bold: true,
+                alignment: 'center'
+              };
+              doc.pageMargins = [30, 30, 30, 30]; // Add some margin around the PDF
+            }
+          },
+          'csv', 'excel', 'colvis'
+        ]
+      }).buttons().container().appendTo('#reportTable_wrapper .col-md-6:eq(0)');
+      
+    });
+
+    // Example PDF Export Handler
+    document.getElementById('downloadPdfBtn').addEventListener('click', function () {
+      window.print(); // Replace with html2pdf or jsPDF if needed
+    });
+  };
+</script>
+
+<%- include("../../partials/footer") %>

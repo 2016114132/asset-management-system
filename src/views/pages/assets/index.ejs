@@ -1,0 +1,57 @@
+<%- include("../../partials/header", { button: { name: "Add New Asset", link: "#", icon: "fas fa-plus-circle" } }) %>
+
+    <!-- Main content -->
+    <section class="content">
+      <div class="container-fluid">
+        <!-- Assets Table -->
+        <div class="card">
+          <div class="card-body">
+            <table id="assetsTable" class="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Asset Tag</th>
+                  <th>Name</th>
+                  <th>Category</th>
+                  <th>Location</th>
+                  <th>Condition</th>
+                  <th>Status</th>
+                  <th>Assigned To</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                <!-- Sample Row -->
+                <tr>
+                  <td>UB-2025-001</td>
+                  <td>HP LaserJet Pro</td>
+                  <td>Printer</td>
+                  <td>Belmopan - Lab A</td>
+                  <td>Fair</td>
+                  <td>Available</td>
+                  <td>—</td>
+                  <td>
+                    <a href="#" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
+                    <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                    <a href="#" class="btn btn-sm btn-danger" title="Delete"><i class="fas fa-trash-alt"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </div><!-- /.container-fluid -->
+    </section>
+    <!-- /.content -->
+
+    <script>
+      window.onload = function () {
+        $('#assetsTable').DataTable({
+          responsive: true,
+          lengthChange: true,
+          autoWidth: false
+        });
+      };
+    </script>
+
+<%- include("../../partials/footer") %>

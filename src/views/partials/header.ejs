@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Asset Management System</title>
+
+  <!-- Google Font: Source Sans Pro -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
+
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="plugins/fontawesome/css/all.min.css">
+
+  <!-- DataTables Core Styles -->
+  <link rel="stylesheet" href="plugins/datatables-bs4/css/dataTables.bootstrap4.min.css">
+  <link rel="stylesheet" href="plugins/datatables-responsive/css/responsive.bootstrap4.min.css">
+  <!-- DataTables Buttons Styles -->
+  <link rel="stylesheet" href="plugins/datatables-buttons/css/buttons.bootstrap4.min.css">
+
+
+  <!-- Theme style -->
+  <link rel="stylesheet" href="styles/theme.css">
+</head>
+<body class="hold-transition sidebar-mini">
+
+<div class="wrapper">
+
+    <%- include("../partials/navbar") %>
+
+    <%- include("../partials/sidebar") %>
+
+  <!-- Content Wrapper. Contains page content -->
+  <div class="content-wrapper">
+    
+    <!-- Content Header (Page header) -->
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0"><%= (typeof title != "undefined") ? title : "" %></h1>
+          </div>
+
+          <% if (typeof button != "undefined") { %> 
+          <div class="col-sm-6 text-right">
+            <a href="<%= button.link %>" class="btn btn-primary">
+              <i class="<%= button.icon %>"></i> 
+              <%= button.name %>
+            </a>
+          </div> 
+          <% } %>
+
+        </div>
+      </div>
+    </div>

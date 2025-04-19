@@ -5,7 +5,8 @@
   "scripts": {
     "build": "rimraf dist && tsc",
     "prestart": "npm run build",
-    "start": "concurrently \"tsc -w\" \"nodemon ./dist/main.js\""
+    "start": "concurrently \"tsc -w\" \"nodemon ./dist/main.js\"",
+    "migrate": "ts-node ./src/database/migrate.ts"
   },
   "author": "Dair Aban, Donovan Yam, Teryn Guzman",
   "license": "ISC",
@@ -16,6 +17,7 @@
     "@types/pg": "^8.11.11",
     "concurrently": "^9.1.2",
     "nodemon": "^3.1.9",
+    "ts-node": "^10.9.2",
     "typescript": "^5.8.3"
   },
   "dependencies": {

@@ -11,7 +11,6 @@ const pool = new Pool({
   port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : undefined,
 });
 
-// Updated types to reflect optional values
 pool.connect((err: Error | undefined, client: PoolClient | undefined, release: (() => void) | undefined) => {
   if (err) {
     console.error("Error acquiring client", err.stack);

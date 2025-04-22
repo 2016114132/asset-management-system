@@ -1,87 +1,46 @@
-<%- include("../../partials/header", { button: { name: "Create Role", link: "#", icon: "fas fa-user-shield" } }) %>
+<% if (permissions.includes('add-roles')) { %>
+  <%- include("../../partials/header", {
+    button: { name: "Add New Role", link: "/roles/create", icon: "fas fa-plus-circle" }
+  }) %>
+<% } else { %>
+  <%- include("../../partials/header") %>
+<% } %>
 
-<!-- Main content -->
 <section class="content">
   <div class="container-fluid">
-    <!-- Roles Table -->
     <div class="card">
       <div class="card-body">
         <table id="rolesTable" class="table table-bordered table-striped">
           <thead>
             <tr>
-              <th>Role</th>
+              <th>Name</th>
               <th>Description</th>
-              <th>Permissions</th>
+              <% if (permissions.includes('modify-roles')) { %>
               <th>Actions</th>
+              <% } %>
             </tr>
           </thead>
           <tbody>
-            <!-- IT Manager -->
-            <tr>
-              <td><strong>IT Manager</strong></td>
-              <td>Full system access including approvals, transfers, and reporting.</td>
-              <td>
-                <span class="badge badge-success">Track Assets</span>
-                <span class="badge badge-success">Modify</span>
-                <span class="badge badge-success">Approve</span>
-                <span class="badge badge-success">Transfer</span>
-                <span class="badge badge-success">Reports</span>
-              </td>
-              <td>
-                <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
-              </td>
-            </tr>
-
-            <!-- IT Staff -->
-            <tr>
-              <td><strong>IT Staff</strong></td>
-              <td>Same as IT Manager, but without approval privileges.</td>
-              <td>
-                <span class="badge badge-success">Track Assets</span>
-                <span class="badge badge-success">Modify</span>
-                <span class="badge badge-success">Transfer</span>
-                <span class="badge badge-success">Reports</span>
-              </td>
-              <td>
-                <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
-              </td>
-            </tr>
-
-            <!-- IT Auditor -->
-            <tr>
-              <td><strong>IT Auditor</strong></td>
-              <td>Read-only access to assets and reports.</td>
-              <td>
-                <span class="badge badge-info">View Assets</span>
-                <span class="badge badge-info">Reports</span>
-              </td>
-              <td>
-                <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
-              </td>
-            </tr>
-
-            <!-- Employee -->
-            <tr>
-              <td><strong>Employee</strong></td>
-              <td>Submit asset requests and track assigned assets.</td>
-              <td>
-                <span class="badge badge-primary">Submit Requests</span>
-                <span class="badge badge-primary">Track Requests</span>
-                <span class="badge badge-primary">Assigned Assets</span>
-                <span class="badge badge-primary">Report Issues</span>
-              </td>
-              <td>
-                <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
-              </td>
-            </tr>
+            <% roles.forEach(role => { %>
+              <tr>
+                <td><%= role.name %></td>
+                <td><%= role.description || '—' %></td>
+                <% if (permissions.includes('modify-roles')) { %>
+                <td>
+                  <a href="/roles/edit/<%= role.id %>" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                  <form action="/roles/delete/<%= role.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Delete this role?')">
+                    <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                  </form>
+                </td>
+                <% } %>
+              </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>
     </div>
-
-  </div><!-- /.container-fluid -->
+  </div>
 </section>
-<!-- /.content -->
 
 <script>
   window.onload = function () {

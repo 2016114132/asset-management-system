@@ -1,53 +1,57 @@
-<%- include("../../partials/header", { button: { name: "Initiate Transfer", link: "#", icon: "fas fa-random" } }) %>
+<% if (permissions.includes('add-transfers')) { %>
+  <%- include("../../partials/header", {
+    button: { name: "New Transfer", link: "/transfers/create", icon: "fas fa-plus-circle" }
+  }) %>
+<% } else { %>
+  <%- include("../../partials/header") %>
+<% } %>
 
-<!-- Main content -->
 <section class="content">
   <div class="container-fluid">
-    <!-- Transfers Table -->
     <div class="card">
       <div class="card-body">
         <table id="transfersTable" class="table table-bordered table-striped">
           <thead>
             <tr>
-              <th>Transfer ID</th>
-              <th>Asset Tag</th>
-              <th>Asset Name</th>
-              <th>From Location</th>
-              <th>To Location</th>
-              <th>Initiated By</th>
+              <th>Asset</th>
+              <th>From Campus</th>
+              <th>To Campus</th>
+              <th>Reason</th>
               <th>Status</th>
-              <th>Transfer Date</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            <!-- Sample Row -->
-            <tr>
-              <td>TRF-2025-001</td>
-              <td>UB-2025-001</td>
-              <td>Lenovo ThinkPad T14</td>
-              <td>Belmopan - Lab B</td>
-              <td>PG Campus - Admin Office</td>
-              <td>Jane Smith</td>
-              <td><span class="badge badge-info">In Transit</span></td>
-              <td>2025-04-05</td>
-              <td>
-                <a href="#" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-sm btn-danger" title="Cancel"><i class="fas fa-times"></i></a>
-              </td>
-            </tr>
-            <!-- Add more rows dynamically -->
+            <% transfers.forEach(tr => { %>
+              <tr>
+                <td><%= tr.asset_tag %> - <%= tr.asset_name %></td>
+                <td><%= tr.from_campus_name %></td>
+                <td><%= tr.to_campus_name %></td>
+                <td><%= tr.reason %></td>
+                <td>
+                  <% if (tr.status === 'Transferred') { %>
+                    <span class="badge badge-success">Transferred</span>
+                  <% } else if (tr.status === 'Pending') { %>
+                    <span class="badge badge-warning">Pending</span>
+                  <% } else if (tr.status === 'Rejected') { %>
+                    <span class="badge badge-danger">Rejected</span>
+                  <% } %>
+                </td>             
+                <td>
+                  <a href="/transfers/view/<%= tr.id %>" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>                  
+                </td>
+                
+              </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>
     </div>
-
-  </div><!-- /.container-fluid -->
+  </div>
 </section>
-<!-- /.content -->
 
 <script>
-  window.onload = function () {
+  window.onload = () => {
     $('#transfersTable').DataTable({
       responsive: true,
       lengthChange: true,

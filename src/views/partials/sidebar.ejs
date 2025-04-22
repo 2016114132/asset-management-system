@@ -11,10 +11,10 @@
     <div class="sidebar">
       <div class="user-panel mt-3 pb-3 mb-3 d-flex">
         <div class="image">
-          <img src="images/profile-male-icon.jpg" class="img-circle elevation-2" alt="User Image">
+          <img src="/images/profile-male-icon.jpg" class="img-circle elevation-2" alt="User Image">
         </div>
         <div class="info" style="color:white;">
-            Dair Aban
+          <%= session.user.displayName %>
         </div>
       </div>
 
@@ -22,7 +22,7 @@
         <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
           
           <li class="nav-item">
-            <a href="/dashboard" class="nav-link">
+            <a href="/dashboard" class="nav-link <%= currentPath.startsWith('/dashboard') ? 'active' : '' %>">
               <i class="nav-icon fa-solid fa-gauge-high"></i>
               <p>
                 Dashboard
@@ -30,32 +30,38 @@
             </a>
           </li>
 
+          <% if (permissions.includes('view-assets')) { %>
           <li class="nav-item">
-            <a href="/assets" class="nav-link">
+            <a href="/assets" class="nav-link <%= currentPath.startsWith('/assets') ? 'active' : '' %>">
               <i class="nav-icon fas fa-boxes"></i>
               <p>
                 Assets
               </p>
             </a>
           </li>
+          <% } %>
 
+          <% if (permissions.includes('view-categories')) { %>
           <li class="nav-item">
-            <a href="/categories" class="nav-link">
+            <a href="/categories" class="nav-link <%= currentPath.startsWith('/categories') ? 'active' : '' %>">
               <i class="nav-icon fas fa-tags"></i>
               <p>
                 Categories
               </p>
             </a>
-          </li>     
+          </li>   
+          <% } %>  
           
+          <% if (permissions.includes('view-requests')) { %>
           <li class="nav-item">
-            <a href="/requests" class="nav-link">
+            <a href="/requests" class="nav-link <%= currentPath.startsWith('/requests') ? 'active' : '' %>">
               <i class="nav-icon fas fa-clipboard-list"></i>
               <p>
                 Asset Requests
               </p>
             </a>
           </li> 
+          <% } %>  
 
           <!-- <li class="nav-item">
             <a href="#" class="nav-link">
@@ -93,61 +99,75 @@
             </ul>
           </li> -->
 
+          <% if (permissions.includes('view-transfers')) { %>
           <li class="nav-item">
-            <a href="/transfers" class="nav-link">
+            <a href="/transfers" class="nav-link <%= currentPath.startsWith('/transfers') ? 'active' : '' %>">
               <i class="nav-icon fas fa-exchange-alt"></i>
               <p>
                 Transfers
               </p>
             </a>
           </li> 
+          <% } %> 
 
+          <% if (permissions.includes('view-employees')) { %>
           <li class="nav-item">
-            <a href="/employees" class="nav-link">
+            <a href="/employees" class="nav-link <%= currentPath.startsWith('/employees') ? 'active' : '' %>">
               <i class="nav-icon fas fa-user-tie"></i>
               <p>
                 Employees
               </p>
             </a>
           </li> 
+          <% } %> 
 
+          <% if (permissions.includes('view-campuses')) { %>
           <li class="nav-item">
-            <a href="/campuses" class="nav-link">
+            <a href="/campuses" class="nav-link <%= currentPath.startsWith('/campuses') ? 'active' : '' %>">
               <i class="nav-icon fas fa-university"></i>
               <p>
                 Campuses
               </p>
             </a>
           </li> 
+          <% } %> 
 
+          <% if (permissions.includes('generate-reports')) { %>
           <li class="nav-item">
-            <a href="/reports" class="nav-link">
+            <a href="/reports" class="nav-link <%= currentPath.startsWith('/reports') ? 'active' : '' %>">
               <i class="nav-icon fas fa-chart-bar"></i>
               <p>
                 Reports
               </p>
             </a>
           </li> 
+          <% } %>
 
+          <% if (permissions.includes('view-users') || permissions.includes('view-roles')) { %>
           <li class="nav-header">SYSTEM SETTINGS</li>
+          <% } %>
 
+          <% if (permissions.includes('view-users')) { %>
           <li class="nav-item">
-            <a href="/users" class="nav-link">
+            <a href="/users" class="nav-link <%= currentPath.startsWith('/users') ? 'active' : '' %>">
               <i class="nav-icon fas fa-users"></i>
               <p>
                 Users
               </p>
             </a>
           </li> 
+          <% } %>
 
+          <% if (permissions.includes('view-roles')) { %>
           <li class="nav-item">
-            <a href="/roles" class="nav-link">
+            <a href="/roles" class="nav-link <%= currentPath.startsWith('/roles') ? 'active' : '' %>">
               <i class="nav-icon fas fa-user-shield"></i>
               <p>
                 Roles
               </p>
             </a>
           </li> 
+          <% } %>
 
         </ul>
       </nav>

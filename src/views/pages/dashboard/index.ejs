@@ -1,72 +1,202 @@
 <%- include("../../partials/header") %>
-    
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
 
-        <div class="row">
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-info">
-              <div class="inner">
-                <h3>150</h3>
-                <p>Total Assets</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-boxes"></i>
-              </div>
-              <a href="#" class="small-box-footer">
-                More info <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
+<section class="content">
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Current Date -->
+      <div class="col-md-6">
+        <div class="info-box bg-light shadow-sm">
+          <span class="info-box-icon bg-primary"><i class="far fa-calendar-alt"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-text">Today’s Date</span>
+            <span class="info-box-number" id="live-date" style="font-size: 1.2rem;"></span>
           </div>
-
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-success">
-              <div class="inner">
-                <h3>53<sup style="font-size: 20px">%</sup></h3>
-                <p>Assigned Assets</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-user-check"></i>
-              </div>
-              <a href="#" class="small-box-footer">
-                View all <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-warning">
-              <div class="inner">
-                <h3>44</h3>
-                <p>Pending Requests</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-clipboard-list"></i>
-              </div>
-              <a href="#" class="small-box-footer">
-                View requests <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-          </div>
-
-          <div class="col-lg-3 col-6">
-            <div class="small-box bg-danger">
-              <div class="inner">
-                <h3>5</h3>
-                <p>Assets for Disposal</p>
-              </div>
-              <div class="icon">
-                <i class="fas fa-trash-alt"></i>
-              </div>
-              <a href="#" class="small-box-footer">
-                Review <i class="fas fa-arrow-circle-right"></i>
-              </a>
-            </div>
-          </div>
-        </div>          
-        
+        </div>
       </div>
-    </section>
+
+      <!-- Current Time -->
+      <div class="col-md-6">
+        <div class="info-box bg-light shadow-sm">
+          <span class="info-box-icon bg-info"><i class="far fa-clock"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-text">Current Time</span>
+            <span class="info-box-number" id="live-time" style="font-size: 1.4rem;"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <% if (!isBasicUser) { %>
+    <!-- Stat Boxes -->
+    <div class="row">
+      <% if (permissions.includes('view-assets')) { %>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-info">
+          <div class="inner"><h3><%= stats.assets %></h3><p>Total Assets</p></div>
+          <div class="icon"><i class="fas fa-boxes"></i></div>
+        </div>
+      </div>
+      <% } %>
+
+      <% if (permissions.includes('view-requests')) { %>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-warning">
+          <div class="inner"><h3><%= stats.pendingRequests %></h3><p>Pending Requests</p></div>
+          <div class="icon"><i class="fas fa-clock"></i></div>
+        </div>
+      </div>
+      <% } %>
+
+      <% if (permissions.includes('view-transfers')) { %>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-success">
+          <div class="inner"><h3><%= stats.transfers %></h3><p>Total Transfers</p></div>
+          <div class="icon"><i class="fas fa-random"></i></div>
+        </div>
+      </div>
+      <% } %>
+
+      <% if (permissions.includes('view-employees')) { %>
+      <div class="col-lg-3 col-6">
+        <div class="small-box bg-primary">
+          <div class="inner"><h3><%= stats.employees %></h3><p>Active Employees</p></div>
+          <div class="icon"><i class="fas fa-users"></i></div>
+        </div>
+      </div>
+      <% } %>
+    </div>
+    
+    <div class="row">
+      <!-- Quick Actions -->
+      <div class="col-md-3">
+        <div class="card card-outline card-info">
+          <div class="card-header"><h3 class="card-title">Quick Actions</h3></div>
+          <div class="card-body">
+            <div class="">
+              <% if (permissions.includes('add-assets')) { %>
+              <a href="/assets/create" class="btn btn-primary btn-block mb-2"><i class="fas fa-plus-circle"></i> New Asset</a>   
+              <% } %>
+              
+              <% if (permissions.includes('add-requests')) { %>
+              <a href="/requests/create" class="btn btn-warning btn-block mb-2"><i class="fas fa-paper-plane"></i> Submit New Request</a>
+              <% } %>
+
+              <% if (permissions.includes('generate-reports')) { %>
+              <a href="/reports" class="btn btn-success btn-block mb-2"><i class="fas fa-chart-line"></i> Generate Report</a>
+              <% } %>
+
+              <a href="/users/edit/<%= currentUser.id %>" class="btn btn-info btn-block mb-2"><i class="fas fa-user-cog"></i> Update Profile</a>
+              <a href="/change-password" class="btn btn-secondary btn-block mb-2"><i class="fas fa-key"></i> Change Password</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pie Chart -->
+      <% if (permissions.includes('view-assets')) { %>
+      <div class="col-md-3">        
+        <div class="card card-outline card-info">
+          <div class="card-header"><h3 class="card-title">Assets by Category</h3></div>
+          <div class="card-body">
+            <canvas id="assetCategoryChart"></canvas>
+          </div>
+        </div>
+      </div>    
+      <% } %>  
+
+      <% if (permissions.includes('view-requests')) { %> 
+      <div class="col-md-6">        
+        <!-- Recent Requests -->
+        <div class="card card-outline card-secondary">
+          <div class="card-header"><h3 class="card-title">Recent Requests</h3></div>
+          <div class="card-body p-0">
+            <table class="table table-striped">
+              <thead><tr><th>Date</th><th>Type</th><th>Status</th></tr></thead>
+              <tbody>
+                <% recentRequests.forEach(r => { %>
+                  <tr>
+                    <td><%= new Date(r.submitted_at).toLocaleDateString() %></td>
+                    <td><%= r.request_type %></td>
+                    <td><span class="badge badge-<%= r.status === 'Pending' ? 'warning' : r.status === 'Approved' ? 'success' : 'danger' %>"><%= r.status %></span></td>
+                  </tr>
+                <% }) %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+      <% } %>
+
+      
+    </div>
+    <% } else { %>
+      <div class="row">
+        <div class="col-lg-6 col-12">
+          <div class="small-box bg-info">
+            <div class="inner">
+              <h3><%= stats.myAssets %></h3>
+              <p>My Assigned Assets</p>
+            </div>
+            <div class="icon"><i class="fas fa-laptop"></i></div>
+          </div>
+        </div>
+        <div class="col-lg-6 col-12">
+          <div class="small-box bg-warning">
+            <div class="inner">
+              <h3><%= stats.myOpenRequests %></h3>
+              <p>My Open Requests</p>
+            </div>
+            <div class="icon"><i class="fas fa-paper-plane"></i></div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+
+<% if (permissions.includes('view-assets')) { %>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  const assetCtx = document.getElementById('assetCategoryChart');
+  new Chart(assetCtx, {
+    type: 'pie',
+    data: {
+      labels: <%- JSON.stringify(chartData.labels) %>,
+      datasets: [{
+        data: <%- JSON.stringify(chartData.counts) %>,
+        backgroundColor: [
+          '#007bff', '#ffc107', '#28a745', '#dc3545',
+          '#6f42c1', '#fd7e14', '#20c997', '#17a2b8'
+        ]
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false
+    }
+  });
+</script>
+<% } %>
+
+<script>
+  function updateDateTime() {
+    const now = new Date();
+
+    const formattedDate = now.toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+
+    const formattedTime = now.toLocaleTimeString('en-US', {
+      hour: '2-digit', minute: '2-digit', second: '2-digit'
+    });
+
+    document.getElementById('live-date').textContent = formattedDate;
+    document.getElementById('live-time').textContent = formattedTime;
+  }
+
+  updateDateTime();
+  setInterval(updateDateTime, 1000);
+</script>
+
 
 <%- include("../../partials/footer") %>

@@ -1,5 +1,6 @@
 CREATE TABLE IF NOT EXISTS permissions (
   id SERIAL PRIMARY KEY,
   name VARCHAR(100) UNIQUE NOT NULL,
-  description TEXT
+  description TEXT,
+  module VARCHAR(50) NOT NULL
 );

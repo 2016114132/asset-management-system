@@ -1,0 +1,103 @@
+<%- include("../../partials/header", { button: { name: "Back to Transfers", link: "/transfers", icon: "fas fa-arrow-left" } }) %>
+
+<section class="content">
+  <div class="container-fluid">
+    <form action="/transfers/create" method="POST">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="form-group">
+            <label>Asset <span class="text-danger">*</span></label>
+            <select name="asset_id" class="form-control" required>
+              <option value="">-- Select Asset --</option>
+              <% assets.forEach(asset => { %>
+                <option value="<%= asset.id %>"><%= asset.asset_tag %> - <%= asset.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>From Campus <span class="text-danger">*</span></label>
+            <select name="from_campus_id" class="form-control" style="pointer-events: none;" readonly required>
+              <option value="">-- Select Campus --</option>
+              <% campuses.forEach(camp => { %>
+                <option value="<%= camp.id %>"><%= camp.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>To Campus <span class="text-danger">*</span></label>
+            <select name="to_campus_id" class="form-control" required>
+              <option value="">-- Select Campus --</option>
+              <% campuses.forEach(camp => { %>
+                <option value="<%= camp.id %>"><%= camp.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>From Employee</label>
+            <select name="from_employee_id" class="form-control" style="pointer-events: none;" readonly>
+              <option value="">-- None --</option>
+              <% employees.forEach(emp => { %>
+                <option value="<%= emp.id %>"><%= emp.first_name %> <%= emp.last_name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>To Employee</label>
+            <select name="to_employee_id" class="form-control">
+              <option value="">-- None --</option>
+              <% employees.forEach(emp => { %>
+                <option value="<%= emp.id %>"><%= emp.first_name %> <%= emp.last_name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Reason <span class="text-danger">*</span></label>
+            <textarea name="reason" class="form-control" rows="3" required></textarea>
+          </div>
+
+        </div>
+        <div class="card-footer text-right">
+          <a href="/transfers" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">Record Transfer</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>
+  window.onload = () => {
+    const assetSelect = $('select[name="asset_id"]');
+
+    assetSelect.on('change', async function () {
+      const assetId = $(this).val();
+      if (!assetId) return;
+
+      try {
+        const res = await fetch(`/transfers/asset-details/${assetId}`);
+        if (!res.ok) throw new Error('Failed to load asset data');
+        const data = await res.json();
+
+        // Auto-fill From Campus
+        const fromCampusSelect = $('select[name="from_campus_id"]');
+        fromCampusSelect.val(data.campus_id || '').trigger('change');
+
+        // Auto-fill From Employee
+        const fromEmployeeSelect = $('select[name="from_employee_id"]');
+        fromEmployeeSelect.val(data.assigned_to || '').trigger('change');
+
+      } catch (error) {
+        console.error(error);
+        alert('Error loading asset details.');
+      }
+    });
+  };
+</script>
+
+<%- include("../../partials/footer") %>

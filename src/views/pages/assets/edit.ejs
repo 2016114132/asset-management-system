@@ -1,0 +1,82 @@
+<%- include("../../partials/header", { button: { name: "Back to Assets", link: "/assets", icon: "fas fa-arrow-left" } }) %>
+
+<section class="content">
+  <div class="container-fluid">
+    <form action="/assets/edit/<%= asset.id %>" method="POST">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="form-group">
+            <label>Asset Tag <span class="text-danger">*</span></label>
+            <input type="text" name="asset_tag" class="form-control" value="<%= asset.asset_tag %>" readonly required>
+          </div>
+
+          <div class="form-group">
+            <label>Name <span class="text-danger">*</span></label>
+            <input type="text" name="name" class="form-control" value="<%= asset.name %>" required>
+          </div>
+
+          <div class="form-group">
+            <label>Category <span class="text-danger">*</span></label>
+            <select name="category_id" class="form-control" required>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat.id %>" <%= cat.id === asset.category_id ? 'selected' : '' %>><%= cat.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Campus <span class="text-danger">*</span></label>
+            <select name="campus_id" class="form-control" required>
+              <% campuses.forEach(camp => { %>
+                <option value="<%= camp.id %>" <%= camp.id === asset.campus_id ? 'selected' : '' %>><%= camp.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Condition <span class="text-danger">*</span></label>
+            <select name="condition" class="form-control" required>
+              <% ['Excellent', 'Good', 'Fair', 'Poor'].forEach(cond => { %>
+                <option value="<%= cond %>" <%= cond === asset.condition ? 'selected' : '' %>><%= cond %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Status <span class="text-danger">*</span></label>
+            <select name="status" class="form-control" required>
+              <% ['Available', 'Assigned', 'In Repair', 'Disposed'].forEach(stat => { %>
+                <option value="<%= stat %>" <%= stat === asset.status ? 'selected' : '' %>><%= stat %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Purchase Date</label>
+            <input type="date" name="purchase_date" class="form-control" value="<%= asset.purchase_date ? asset.purchase_date.toISOString().split('T')[0] : '' %>">
+          </div>
+
+          <div class="form-group">
+            <label>Assigned To</label>
+            <select name="assigned_to" class="form-control">
+              <option value="">-- Unassigned --</option>
+              <% employees.forEach(emp => { %>
+                <option value="<%= emp.id %>" <%= emp.id === asset.assigned_to ? 'selected' : '' %>>
+                  <%= emp.first_name %> <%= emp.last_name %>
+                </option>
+              <% }) %>
+            </select>
+          </div>
+
+        </div>
+        <div class="card-footer text-right">
+          <a href="/assets" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include("../../partials/footer") %>

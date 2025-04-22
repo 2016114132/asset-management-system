@@ -1,4 +1,10 @@
-<%- include("../../partials/header", { button: { name: "Add New Category", link: "#", icon: "fas fa-plus-circle" } }) %>
+<% if (permissions.includes('add-categories')) { %>
+  <%- include("../../partials/header", {
+    button: { name: "Add New Category", link: "/categories/create", icon: "fas fa-plus-circle" }
+  }) %>
+<% } else { %>
+  <%- include("../../partials/header") %>
+<% } %>
 
 <!-- Main content -->
 <section class="content">
@@ -12,29 +18,38 @@
               <th>Category Name</th>
               <th>Description</th>
               <th>Total Assets</th>
+              <% if (permissions.includes('modify-categories')) { %>
               <th>Actions</th>
+              <% } %>
             </tr>
           </thead>
           <tbody>
-            <!-- Sample Row -->
-            <tr>
-              <td>Computer</td>
-              <td>Desktops, Laptops, and related peripherals</td>
-              <td>32</td>
-              <td>
-                <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
-                <a href="#" class="btn btn-sm btn-danger" title="Delete"><i class="fas fa-trash-alt"></i></a>
-              </td>
-            </tr>
-            <!-- Add more rows dynamically -->
+            <% categories.forEach(category => { %>
+              <tr>
+                <td><%= category.name %></td>
+                <td><%= category.description || '' %></td>
+                <td><%= category.totalAssets || 0 %></td>
+                <% if (permissions.includes('modify-categories')) { %>
+                <td>
+                  
+                  <a href="/categories/edit/<%= category.id %>" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                  <form action="/categories/delete/<%= category.id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')" title="Delete">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </form>                  
+                </td>
+                <% } %>
+              </tr>
+            <% }) %>
           </tbody>
+          
         </table>
       </div>
     </div>
 
-  </div><!-- /.container-fluid -->
+  </div>
 </section>
-<!-- /.content -->
 
 <script>
   window.onload = function () {

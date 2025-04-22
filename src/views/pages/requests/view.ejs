@@ -1,0 +1,77 @@
+<%- include("../../partials/header", { button: { name: "Back to Requests", link: "/requests", icon: "fas fa-arrow-left" } }) %>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Request Type</label>
+              <input type="text" class="form-control" value="<%= request.request_type %>" readonly>
+            </div>
+          </div>
+
+          <% if (asset) { %>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Related Asset</label>
+              <input type="text" class="form-control" value="<%= asset.asset_tag %> - <%= asset.name %>" readonly>
+            </div>
+          </div>
+          <% } %>
+
+          
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Requested By</label>
+              <input type="text" class="form-control" value="<%= employee.first_name + ' ' + employee.last_name %>" readonly>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Date Submitted</label>
+              <input type="text" class="form-control" value="<%= new Date(request.submitted_at).toLocaleDateString() %>" readonly>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Status</label>
+              <input type="text" class="form-control" value="<%= request.status %>" readonly>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Description</label>
+              <textarea class="form-control" rows="3" readonly><%= request.description %></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <% if (request.status === 'Pending') { %>
+        <% if (permissions.includes('requests-approval')) { %>
+        <div class="card-footer text-right">
+          <form action="/requests/update-status/<%= request.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Approve this request?')">
+            <input type="hidden" name="status" value="Approved">
+            <button type="submit" class="btn btn-success">Approve</button>
+          </form>
+          <form action="/requests/update-status/<%= request.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Reject this request?')">
+            <input type="hidden" name="status" value="Denied">
+            <button type="submit" class="btn btn-danger">Reject</button>
+          </form>
+        </div>
+        <% } %>
+      <% } %>
+
+    </div>
+  </div>
+</section>
+
+<%- include("../../partials/footer") %>

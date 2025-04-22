@@ -1,45 +1,50 @@
 import express from "express"
+import { requireAuth } from '../middleware/authMiddleware';
+import authRoute from './authRoute';
 import { dashboardIndex } from "../controllers/dashboardController"
-import { assetsIndex } from "../controllers/assetsController"
-import { categoriesIndex } from "../controllers/categoriesController"
-import { requestsIndex } from "../controllers/requestsController"
-import { transfersIndex } from "../controllers/transfersController"
-import { employeesIndex } from "../controllers/employeesController"
-import { campusesIndex } from "../controllers/campusesController"
-import { reportsIndex } from "../controllers/reportsController"
-import { usersIndex } from "../controllers/usersController"
-import { rolesIndex } from "../controllers/rolesController"
+import assetsRoute from './assetsRoute';
+import categoriesRoute from './categoriesRoute';
+import requestsRoute from './requestsRoute';
+import transfersRoute from './transfersRoute'; 
+import employeesRoute from './employeesRoute';
+import campusesRoute from './campusesRoute';
+import reportRoutes from './reportsRoute'
+import usersRoutes from "./usersRoute"
+import rolesRoute from "./rolesRoute"
 
 const router = express.Router();
 
+// Auth Routes
+router.use('/', authRoute);
+
 // Dashboard Routes
-router.get("/dashboard", dashboardIndex);
+router.get("/dashboard", requireAuth, dashboardIndex);
 
 // Assets Routes
-router.get("/assets", assetsIndex);
+router.use('/assets', requireAuth, assetsRoute);
 
 // Categories Routes
-router.get("/categories", categoriesIndex);
+router.use('/categories', requireAuth, categoriesRoute);
 
 // Asset Requests Routes
-router.get("/requests", requestsIndex);
+router.use('/requests', requireAuth, requestsRoute);
 
 // Transfers Routes
-router.get("/transfers", transfersIndex);
+router.use('/transfers', requireAuth, transfersRoute);
 
 // Employees Routes
-router.get("/employees", employeesIndex);
+router.use('/employees', requireAuth, employeesRoute);
 
 // Campuses Routes
-router.get("/campuses", campusesIndex);
+router.use('/campuses', requireAuth, campusesRoute);
 
 // Reports Routes
-router.get("/reports", reportsIndex);
+router.use('/reports', requireAuth, reportRoutes);
 
 // Users Routes
-router.get("/users", usersIndex);
+router.use('/users', requireAuth, usersRoutes);
 
 // Roles Routes
-router.get("/roles", rolesIndex);
+router.use('/roles', requireAuth, rolesRoute);
 
 export default router

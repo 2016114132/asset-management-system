@@ -1,0 +1,60 @@
+<%- include("../../partials/header", { button: { name: "Back to Assets", link: "/assets", icon: "fas fa-arrow-left" } }) %>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="form-group">
+          <label>Asset Tag</label>
+          <input type="text" class="form-control" value="<%= asset.asset_tag %>" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" class="form-control" value="<%= asset.name %>" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Category</label>
+          <input type="text" class="form-control" value="<%= category?.name || '' %>" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Campus</label>
+          <input type="text" class="form-control" value="<%= campus?.name || '' %>" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Condition</label>
+          <input type="text" class="form-control" value="<%= asset.condition %>" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          <input type="text" class="form-control" value="<%= asset.status %>" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Purchase Date</label>
+          <input type="text" class="form-control" value="<%= asset.purchase_date ? new Date(asset.purchase_date).toDateString() : '' %>" readonly>
+        </div>
+
+        <div class="form-group">
+          <label>Assigned To</label>
+          <input type="text" class="form-control" value="<%= employee ? employee.first_name + ' ' + employee.last_name : '' %>" readonly>
+        </div>
+
+      </div>
+
+      <div class="card-footer text-right">
+        <a href="/assets" class="btn btn-secondary">Back</a>
+        <% if (permissions.includes('modify-assets')) { %>
+        <a href="/assets/edit/<%= asset.id %>" class="btn btn-primary">Edit Asset</a>
+        <% } %>
+      </div>
+    </div>
+  </div>
+</section>
+
+<%- include("../../partials/footer") %>

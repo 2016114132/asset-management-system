@@ -1,0 +1,74 @@
+<%- include("../../partials/header", { button: { name: "Back to Requests", link: "/requests", icon: "fas fa-arrow-left" } }) %>
+
+<section class="content">
+  <div class="container-fluid">
+    <form action="/requests/create" method="POST">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="form-group">
+            <label>Request Type <span class="text-danger">*</span></label>
+            <select name="request_type" class="form-control" id="request_type" required>
+              <option value="">-- Select Type --</option>
+              <option value="New">New</option>
+              <option value="Replacement">Replacement</option>
+              <option value="Repair">Repair</option>
+              <option value="Disposal">Disposal</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="asset_group" style="display:none;">
+            <label>Related Asset <span class="text-danger">*</span></label>
+            <select name="asset_id" class="form-control">
+              <option value="">-- Select Asset --</option>
+              <% assets.forEach(asset => { %>
+                <option value="<%= asset.id %>"><%= asset.asset_tag %> - <%= asset.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Description <span class="text-danger">*</span></label>
+            <textarea name="description" class="form-control" rows="3" required></textarea>
+          </div>
+
+          <input type="hidden" name="requested_by" value="<%= currentUser.id %>">
+          <div class="form-group">
+            <label>Requested By</label>
+            <input type="text" class="form-control" value="<%= currentUser.displayName %>" readonly>
+          </div>
+
+        </div>
+        <div class="card-footer text-right">
+          <a href="/requests" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<script>  
+  document.addEventListener('DOMContentLoaded', function () {
+    const needsAsset = ['Replacement', 'Repair', 'Disposal'];
+
+    $('#request_type').on('change', function () {
+      const value = $(this).val();
+      const show = needsAsset.includes(value);
+      $('#asset_group').toggle(show);
+
+      const $assetSelect = $('select[name="asset_id"]');
+      if (show) {
+        $assetSelect.prop('required', true);
+      } else {
+        $assetSelect.prop('required', false);
+        $assetSelect.val('').trigger('change'); 
+      }
+    });
+
+    $('#request_type').trigger('change');
+
+  });
+</script>
+
+<%- include("../../partials/footer") %>

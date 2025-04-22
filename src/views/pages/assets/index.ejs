@@ -1,57 +1,68 @@
-<%- include("../../partials/header", { button: { name: "Add New Asset", link: "#", icon: "fas fa-plus-circle" } }) %>
+<% if (permissions.includes('add-assets')) { %>
+  <%- include("../../partials/header", {
+    button: { name: "Add New Asset", link: "/assets/create", icon: "fas fa-plus-circle" }
+  }) %>
+<% } else { %>
+  <%- include("../../partials/header") %>
+<% } %>
 
-    <!-- Main content -->
-    <section class="content">
-      <div class="container-fluid">
-        <!-- Assets Table -->
-        <div class="card">
-          <div class="card-body">
-            <table id="assetsTable" class="table table-bordered table-striped">
-              <thead>
-                <tr>
-                  <th>Asset Tag</th>
-                  <th>Name</th>
-                  <th>Category</th>
-                  <th>Location</th>
-                  <th>Condition</th>
-                  <th>Status</th>
-                  <th>Assigned To</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <!-- Sample Row -->
-                <tr>
-                  <td>UB-2025-001</td>
-                  <td>HP LaserJet Pro</td>
-                  <td>Printer</td>
-                  <td>Belmopan - Lab A</td>
-                  <td>Fair</td>
-                  <td>Available</td>
-                  <td>—</td>
-                  <td>
-                    <a href="#" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
-                    <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
-                    <a href="#" class="btn btn-sm btn-danger" title="Delete"><i class="fas fa-trash-alt"></i></a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
 
-      </div><!-- /.container-fluid -->
-    </section>
-    <!-- /.content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+        <table id="assetsTable" class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th>Asset Tag</th>
+              <th>Name</th>
+              <th>Category</th>
+              <th>Campus</th>
+              <th>Condition</th>
+              <th>Status</th>
+              <th>Assigned To</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% assets.forEach(asset => { %>
+              <tr>
+                <td><%= asset.asset_tag %></td>
+                <td><%= asset.name %></td>
+                <td><%= asset.category_name %></td>
+                <td><%= asset.campus_name %></td>
+                <td><%= asset.condition %></td>
+                <td><%= asset.status %></td>
+                <td><%= asset.assigned_to_name || '—' %></td>
+                <td>
+                  <a href="/assets/view/<%= asset.id %>" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
+                  
+                  <% if (permissions.includes('modify-assets')) { %>
+                  <a href="/assets/edit/<%= asset.id %>" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                  <form action="/assets/delete/<%= asset.id %>" method="POST" style="display:inline;">
+                    <button type="submit" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure?')" title="Delete">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </form>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
 
-    <script>
-      window.onload = function () {
-        $('#assetsTable').DataTable({
-          responsive: true,
-          lengthChange: true,
-          autoWidth: false
-        });
-      };
-    </script>
+<script>
+  window.onload = function () {
+    $('#assetsTable').DataTable({
+      responsive: true,
+      lengthChange: true,
+      autoWidth: false
+    });
+  };
+</script>
 
 <%- include("../../partials/footer") %>

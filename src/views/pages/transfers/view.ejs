@@ -1,0 +1,94 @@
+<%- include("../../partials/header", { button: { name: "Back to Transfers", link: "/transfers", icon: "fas fa-arrow-left" } }) %>
+
+<section class="content">
+  <div class="container-fluid">
+    <div class="card">
+      <div class="card-body">
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Asset</label>
+              <input type="text" class="form-control" value="<%= asset.asset_tag %> - <%= asset.name %>" readonly>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Status</label>
+              <input type="text" class="form-control" value="<%= transfer.status %>" readonly>
+            </div>
+          </div>
+          
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>From Campus</label>
+              <input type="text" class="form-control" value="<%= fromCampus?.name %>" readonly>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>To Campus</label>
+              <input type="text" class="form-control" value="<%= toCampus?.name %>" readonly>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>From Employee</label>
+              <input type="text" class="form-control" value="<%= fromEmployee ? fromEmployee.first_name + ' ' + fromEmployee.last_name : '—' %>" readonly>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>To Employee</label>
+              <input type="text" class="form-control" value="<%= toEmployee ? toEmployee.first_name + ' ' + toEmployee.last_name : '—' %>" readonly>
+            </div>
+          </div>
+
+          
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Transferred By</label>
+              <input type="text" class="form-control" value="<%= byUser.first_name + ' ' + byUser.last_name %>" readonly>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="form-group">
+              <label>Date</label>
+              <input type="text" class="form-control" value="<%= new Date(transfer.transferred_at).toLocaleDateString() %>" readonly>
+            </div>
+          </div>
+
+          <div class="col-md-12">
+            <div class="form-group">
+              <label>Reason</label>
+              <textarea class="form-control" rows="3" readonly><%= transfer.reason %></textarea>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <% if (transfer.status !== 'Transferred') { %>
+        <% if (permissions.includes('transfers-approval')) { %>
+        <div class="card-footer text-right">
+          <form action="/transfers/update-status/<%= transfer.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Approve this transfer?')">
+            <input type="hidden" name="status" value="Transferred">
+            <button type="submit" class="btn btn-success">Approve</button>
+          </form>
+          <form action="/transfers/update-status/<%= transfer.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Reject this transfer?')">
+            <input type="hidden" name="status" value="Rejected">
+            <button type="submit" class="btn btn-danger">Reject</button>
+          </form>
+        </div>
+        <% } %>
+      <% } %>
+
+    </div>
+  </div>
+</section>
+
+<%- include("../../partials/footer") %>

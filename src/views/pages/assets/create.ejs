@@ -1,0 +1,84 @@
+<%- include("../../partials/header", { button: { name: "Back to Assets", link: "/assets", icon: "fas fa-arrow-left" } }) %>
+
+<section class="content">
+  <div class="container-fluid">
+    <form action="/assets/create" method="POST">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="form-group">
+            <label>Asset Tag <span class="text-danger">*</span></label>
+            <input type="text" name="asset_tag" class="form-control" value="<%= nextAssetTag %>" readonly required>
+          </div>          
+
+          <div class="form-group">
+            <label>Name <span class="text-danger">*</span></label>
+            <input type="text" name="name" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Category <span class="text-danger">*</span></label>
+            <select name="category_id" class="form-control" required>
+              <option value="">-- Select Category --</option>
+              <% categories.forEach(cat => { %>
+                <option value="<%= cat.id %>"><%= cat.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Campus <span class="text-danger">*</span></label>
+            <select name="campus_id" class="form-control" required>
+              <option value="">-- Select Campus --</option>
+              <% campuses.forEach(camp => { %>
+                <option value="<%= camp.id %>"><%= camp.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Condition <span class="text-danger">*</span></label>
+            <select name="condition" class="form-control" required>
+              <option value="Excellent">Excellent</option>
+              <option value="Good">Good</option>
+              <option value="Fair">Fair</option>
+              <option value="Poor">Poor</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Status <span class="text-danger">*</span></label>
+            <select name="status" class="form-control" required>
+              <option value="Available">Available</option>
+              <option value="Assigned">Assigned</option>
+              <option value="In Repair">In Repair</option>
+              <option value="Disposed">Disposed</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Purchase Date</label>
+            <input type="date" name="purchase_date" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label>Assigned To</label>
+            <select name="assigned_to" class="form-control">
+              <option value="">-- Unassigned --</option>
+              <% employees.forEach(emp => { %>
+                <option value="<%= emp.id %>"><%= emp.first_name %> <%= emp.last_name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+        </div>
+        <div class="card-footer text-right">
+          <a href="/assets" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include("../../partials/footer") %>

@@ -1,47 +1,58 @@
-<%- include("../../partials/header", { button: { name: "Add New Employee", link: "#", icon: "fas fa-user-plus" } }) %>
+<% if (permissions.includes('add-employees')) { %>
+  <%- include("../../partials/header", {
+    button: { name: "Add New Employee", link: "/employees/create", icon: "fas fa-plus-circle" }
+  }) %>
+<% } else { %>
+  <%- include("../../partials/header") %>
+<% } %>
 
-<!-- Main content -->
 <section class="content">
   <div class="container-fluid">
-    <!-- Employees Table -->
     <div class="card">
       <div class="card-body">
         <table id="employeesTable" class="table table-bordered table-striped">
           <thead>
             <tr>
-              <th>Employee ID</th>
-              <th>Full Name</th>
+              <th>Employee Code</th>
+              <th>Name</th>
               <th>Email</th>
               <th>Department</th>
-              <th>Role(s)</th>
               <th>Status</th>
+              <% if (permissions.includes('modify-employees')) { %>
               <th>Actions</th>
+              <% } %>
             </tr>
           </thead>
           <tbody>
-            <!-- Sample Row -->
-            <tr>
-              <td>EMP-1001</td>
-              <td>Dr. Anna Martinez</td>
-              <td>anna.martinez@ub.edu.bz</td>
-              <td>Faculty of Science & Technology</td>
-              <td><span class="badge badge-primary">Faculty</span></td>
-              <td><span class="badge badge-success">Active</span></td>
-              <td>
-                <a href="#" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
-                <a href="#" class="btn btn-sm btn-secondary" title="Deactivate"><i class="fas fa-user-slash"></i></a>
-              </td>
-            </tr>
-            <!-- Add more rows dynamically -->
+            <% employees.forEach(emp => { %>
+              <tr>
+                <td><%= emp.employee_code %></td>
+                <td><%= emp.first_name %> <%= emp.last_name %></td>
+                <td><%= emp.email || '—' %></td>
+                <td><%= emp.department || '—' %></td>
+                <td>
+                  <% if (emp.status === 'Active') { %>
+                    <span class="badge badge-success">Active</span>
+                  <% } else { %>
+                    <span class="badge badge-secondary">Inactive</span>
+                  <% } %>
+                </td>
+                <% if (permissions.includes('modify-employees')) { %>
+                <td>                  
+                  <a href="/employees/edit/<%= emp.id %>" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                  <form action="/employees/delete/<%= emp.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Delete this employee?')">
+                    <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                  </form>
+                </td>
+                <% } %>
+              </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>
     </div>
-
-  </div><!-- /.container-fluid -->
+  </div>
 </section>
-<!-- /.content -->
 
 <script>
   window.onload = function () {
@@ -51,6 +62,7 @@
       autoWidth: false
     });
   };
+  
 </script>
 
 <%- include("../../partials/footer") %>

@@ -1,51 +1,58 @@
-<%- include("../../partials/header", { button: { name: "Add New User", link: "#", icon: "fas fa-user-plus" } }) %>
+<% if (permissions.includes('add-users')) { %>
+  <%- include("../../partials/header", {
+    button: { name: "Add New User", link: "/users/create", icon: "fas fa-plus-circle" }
+  }) %>
+<% } else { %>
+  <%- include("../../partials/header") %>
+<% } %>
 
-<!-- Main content -->
 <section class="content">
   <div class="container-fluid">
-    <!-- Users Table -->
     <div class="card">
       <div class="card-body">
         <table id="usersTable" class="table table-bordered table-striped">
           <thead>
             <tr>
-              <th>User ID</th>
               <th>Name</th>
               <th>Email</th>
-              <th>Role(s)</th>
+              <th>Role</th>
               <th>Status</th>
               <th>Last Login</th>
+              <% if (permissions.includes('modify-users')) { %>
               <th>Actions</th>
+              <% } %>
             </tr>
           </thead>
           <tbody>
-            <!-- Sample Row -->
-            <tr>
-              <td>USR-001</td>
-              <td>Kevin Avila</td>
-              <td>kevin.avila@ub.edu.bz</td>
-              <td>
-                <span class="badge badge-primary">Employee</span>
-                <span class="badge badge-info">IT Auditor</span>
-              </td>
-              <td><span class="badge badge-success">Active</span></td>
-              <td>2025-04-06 10:34 AM</td>
-              <td>
-                <a href="#" class="btn btn-sm btn-info" title="View"><i class="fas fa-eye"></i></a>
-                <a href="#" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
-                <a href="#" class="btn btn-sm btn-secondary" title="Reset Password"><i class="fas fa-key"></i></a>
-                <a href="#" class="btn btn-sm btn-danger" title="Deactivate"><i class="fas fa-user-slash"></i></a>
-              </td>
-            </tr>
-            <!-- More rows dynamically -->
+            <% users.forEach(user => { %>
+              <tr>
+                <td><%= user.first_name %> <%= user.last_name %></td>
+                <td><%= user.email %></td>
+                <td><%= user.role || '—' %></td>
+                <td>
+                  <% if (user.status === 'Active') { %>
+                    <span class="badge badge-success">Active</span>
+                  <% } else { %>
+                    <span class="badge badge-secondary">Inactive</span>
+                  <% } %>
+                </td>
+                <td><%= user.last_login ? new Date(user.last_login).toLocaleString() : '—' %></td>
+                <% if (permissions.includes('modify-users')) { %>
+                <td>
+                  <a href="/users/edit/<%= user.id %>" class="btn btn-sm btn-warning" title="Edit"><i class="fas fa-edit"></i></a>
+                  <form action="/users/delete/<%= user.id %>" method="POST" style="display:inline;" onsubmit="return confirm('Delete this user?')">
+                    <button type="submit" class="btn btn-sm btn-danger" title="Delete"><i class="fas fa-trash-alt"></i></button>
+                  </form>
+                </td>
+                <% } %>
+              </tr>
+            <% }) %>
           </tbody>
         </table>
       </div>
     </div>
-
-  </div><!-- /.container-fluid -->
+  </div>
 </section>
-<!-- /.content -->
 
 <script>
   window.onload = function () {

@@ -1,0 +1,57 @@
+<%- include("../../partials/header", { button: { name: "Back to Users", link: "/users", icon: "fas fa-arrow-left" } }) %>
+
+<section class="content">
+  <div class="container-fluid">
+    <form action="/users/create" method="POST">
+      <div class="card">
+        <div class="card-body">
+
+          <div class="form-group">
+            <label>Employee <span class="text-danger">*</span></label>
+            <select name="employee_id" class="form-control" required>
+              <option value="">Select Employee</option>
+              <% employees.forEach(emp => { %>
+                <option value="<%= emp.id %>"><%= emp.first_name %> <%= emp.last_name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Email <span class="text-danger">*</span></label>
+            <input type="email" name="email" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Password <span class="text-danger">*</span></label>
+            <input type="password" name="password" class="form-control" required>
+          </div>
+
+          <div class="form-group">
+            <label>Role <span class="text-danger">*</span></label>
+            <select name="role_id" class="form-control" required>
+              <option value="">Select Role</option>
+              <% roles.forEach(role => { %>
+                <option value="<%= role.id %>"><%= role.name %></option>
+              <% }) %>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Status</label>
+            <select name="status" class="form-control">
+              <option value="Active" selected>Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+        </div>
+        <div class="card-footer text-right">
+          <a href="/users" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">Save</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</section>
+
+<%- include("../../partials/footer") %>

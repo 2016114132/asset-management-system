@@ -1,5 +1,5 @@
 export interface IAsset {
-    id: number;
+    id?: number;
     asset_tag: string;
     name: string;
     category_id: number;

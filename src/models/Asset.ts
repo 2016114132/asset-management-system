@@ -1,8 +1,8 @@
 import db from '../config/db';
 import { IAsset } from '../interfaces/IAsset';
+import DatabaseModel from './DatabaseModel';
 
-export class Asset implements IAsset {
-  id: number;
+export class Asset extends DatabaseModel implements IAsset {
   asset_tag: string;
   name: string;
   category_id: number;
@@ -11,11 +11,10 @@ export class Asset implements IAsset {
   status: string;
   purchase_date?: string;
   assigned_to?: number | null;
-  created_at?: string;
-  updated_at?: string;
 
   constructor(data: IAsset) {
-    this.id = data.id;
+    super(data.id, data.created_at, data.updated_at);
+
     this.asset_tag = data.asset_tag;
     this.name = data.name;
     this.category_id = data.category_id;
@@ -24,8 +23,6 @@ export class Asset implements IAsset {
     this.status = data.status;
     this.purchase_date = data.purchase_date;
     this.assigned_to = data.assigned_to ?? null;
-    this.created_at = data.created_at;
-    this.updated_at = data.updated_at;
   }
 
   static async getAll(employeeId?: number): Promise<any[]> {
@@ -58,58 +55,16 @@ export class Asset implements IAsset {
   
     return result.rows;
   }
-  
-  
 
-  static async findById(id: number): Promise<IAsset | null> {
+  static async findById(id: number): Promise<Asset | null> {
     const result = await db.query('SELECT * FROM assets WHERE id = $1', [id]);
-    return result.rows[0] || null;
-  }
 
-  static async create(data: Partial<IAsset>): Promise<void> {
-    await db.query(
-      `INSERT INTO assets 
-        (asset_tag, name, category_id, campus_id, condition, status, purchase_date, assigned_to, created_at, updated_at)
-       VALUES
-        ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)`,
-      [
-        data.asset_tag,
-        data.name,
-        data.category_id,
-        data.campus_id,
-        data.condition,
-        data.status,
-        data.purchase_date,
-        data.assigned_to || null
-      ]
-    );
-  }
+    if (result.rows.length === 0) {
+      return null;
+    }
 
-  static async update(id: number, data: Partial<IAsset>): Promise<void> {
-    await db.query(
-      `UPDATE assets SET 
-        asset_tag = $1,
-        name = $2,
-        category_id = $3,
-        campus_id = $4,
-        condition = $5,
-        status = $6,
-        purchase_date = $7,
-        assigned_to = $8,
-        updated_at = CURRENT_TIMESTAMP
-       WHERE id = $9`,
-      [
-        data.asset_tag,
-        data.name,
-        data.category_id,
-        data.campus_id,
-        data.condition,
-        data.status,
-        data.purchase_date,
-        data.assigned_to || null,
-        id
-      ]
-    );
+    // Create and return an instance of this model
+    return new Asset(result.rows[0]);
   }
 
   static async delete(id: number): Promise<void> {
@@ -149,5 +104,69 @@ export class Asset implements IAsset {
     );
   }
   
-  
+  // Function to save or insert data
+  async save(): Promise<boolean> {
+    try{
+      if(!this.id){
+        // New record
+        const result = await db.query(
+          `INSERT INTO assets 
+            (asset_tag, name, category_id, campus_id, condition, status, purchase_date, assigned_to, created_at, updated_at)
+          VALUES
+            ($1, $2, $3, $4, $5, $6, $7, $8, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
+            RETURNING *`,
+          [
+            this.asset_tag,
+            this.name,
+            this.category_id,
+            this.campus_id,
+            this.condition,
+            this.status,
+            this.purchase_date || null,
+            this.assigned_to || null
+          ]
+        );
+
+        // Update local instance fields
+        this.id = result.rows[0].id;
+        this.created_at = result.rows[0].created_at;
+        this.updated_at = result.rows[0].updated_at;
+      }else{
+        // Update existing record
+        const result = await db.query(
+          `UPDATE assets SET 
+            asset_tag = $1,
+            name = $2,
+            category_id = $3,
+            campus_id = $4,
+            condition = $5,
+            status = $6,
+            purchase_date = $7,
+            assigned_to = $8,
+            updated_at = CURRENT_TIMESTAMP
+          WHERE id = $9
+          RETURNING *`,
+          [
+            this.asset_tag,
+            this.name,
+            this.category_id,
+            this.campus_id,
+            this.condition,
+            this.status,
+            this.purchase_date || null,
+            this.assigned_to || null,
+            this.id
+          ]
+        );
+
+        // Update instance fields
+        this.updated_at = result.rows[0].updated_at;
+      }
+
+      return true;
+    } catch (err) {
+      console.log(err);
+      return false;
+    }
+  }
 }

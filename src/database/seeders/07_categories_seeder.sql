@@ -10,5 +10,5 @@ INSERT INTO categories (name, description, created_at, updated_at) VALUES
 ('Monitor', 'External displays for desktops or dual-screen setups', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Keyboard', 'Input devices used with desktops or servers', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
 ('Mouse', 'Pointing devices for computers', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP),
-('Server', 'High-performance machines used for hosting services', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-ON CONFLICT (name) DO NOTHING;
+('Server', 'High-performance machines used for hosting services', CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+-- ON CONFLICT (name) DO NOTHING;

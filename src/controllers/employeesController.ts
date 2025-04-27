@@ -43,7 +43,8 @@ export const employeesCreate = async (req: Request, res: Response) => {
       return res.redirect('/employees/create');
     }
 
-    const newEmployeeId = await Employee.create({
+    // Create new instance of object
+    const employee = new Employee({
       employee_code,
       first_name,
       last_name,
@@ -52,13 +53,21 @@ export const employeesCreate = async (req: Request, res: Response) => {
       status: status || 'Active'
     });
 
+    // Save the instance
+    const saved = await employee.save();
+
+    if(!saved){
+      (req as any).flash('error', 'Unable to create employee');
+      return res.redirect('/employees/create');
+    }       
+
     req.flash('success', 'Employee created successfully');
 
     if (create_user === '1' && email) {
       const roleId = req.body.role_id || 4; // default to Employee role
       const tempPassword = generateTempPassword();
 
-      await User.createFromEmployee(newEmployeeId, email, tempPassword, roleId); 
+      await User.createFromEmployee(employee.id ?? 0, email, tempPassword, roleId); 
 
       // Log & email
       console.log(`Send welcome email to ${email} with temp password: ${tempPassword}`);
@@ -102,23 +111,37 @@ export const employeesUpdate = async (req: Request, res: Response) => {
     const { employee_code, first_name, last_name, email, department, status } = req.body;
 
     if (!employee_code || !first_name || !last_name) {
-      const employee = await Employee.findById(id);
       req.flash('error', 'Employee Code, First Name and Last Name are required');
-      return res.render('pages/employees/edit', {
-        title,
-        employee,
-        error: 'Employee Code, First Name and Last Name are required'
-      });
+      res.redirect(`/employees/edit/${req.params.id}`);
     }
 
-    await Employee.update(id, {
+    // await Employee.update(id, {
+    //   employee_code,
+    //   first_name,
+    //   last_name,
+    //   email,
+    //   department,
+    //   status
+    // });
+
+    // Create new instance of object
+    const employee = new Employee({
+      id,
       employee_code,
       first_name,
       last_name,
       email,
       department,
-      status
+      status: status
     });
+ 
+    // Save the instance
+    const saved = await employee.save();
+
+    if(!saved){
+      (req as any).flash('error', 'Unable to edit employee');
+      res.redirect(`/employees/edit/${req.params.id}`);
+    }    
 
     req.flash('success', 'Employee updated successfully');
     res.redirect('/employees');

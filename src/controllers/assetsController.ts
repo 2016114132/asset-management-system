@@ -21,7 +21,6 @@ export const assetsIndex = async (req: Request, res: Response) => {
   }
 };
 
-
 export const assetsCreateForm = async (req: Request, res: Response) => {
   try {
     const categories = await Category.getAll();
@@ -62,7 +61,7 @@ export const assetsCreate = async (req: Request, res: Response) => {
       return res.redirect(req.get('Referrer') || '/assets/create');
     }
 
-    await Asset.create({
+    const newAsset = new Asset({
       asset_tag,
       name,
       category_id: Number(category_id),
@@ -72,6 +71,13 @@ export const assetsCreate = async (req: Request, res: Response) => {
       purchase_date: purchase_date || null,
       assigned_to: assigned_to || null
     });
+
+    const saved = await newAsset.save();
+
+    if(!saved){
+      (req as any).flash('error', 'Unable to create asset');
+      return res.redirect(req.get('Referrer') || '/assets/create');
+    }   
 
     (req as any).flash('success', 'Asset created successfully');
     res.redirect('/assets');
@@ -129,16 +135,25 @@ export const assetsUpdate = async (req: Request, res: Response) => {
       return res.redirect(req.get('Referrer') || `/assets/edit/${id}`);
     }
 
-    await Asset.update(id, {
+    // Create an instance of the asset
+    const asset = new Asset({
+      id,
       asset_tag,
       name,
-      category_id: Number(category_id),
-      campus_id: Number(campus_id),
+      category_id,
+      campus_id,
       condition,
       status,
-      purchase_date: purchase_date || null,
-      assigned_to: assigned_to || null
+      purchase_date,
+      assigned_to
     });
+
+    const saved = await asset.save();
+
+    if(!saved){
+      (req as any).flash('error', 'Unable to save asset');
+      return res.redirect(req.get('Referrer') || `/assets/edit/${id}`);
+    }        
 
     (req as any).flash('success', 'Asset updated successfully');
     res.redirect('/assets');

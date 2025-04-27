@@ -27,7 +27,20 @@ export const campusesCreate = async (req: Request, res: Response) => {
       return res.redirect(req.get('Referrer') || '/campuses/create');
     }
 
-    await Campus.create({ name, location });
+    // Create an instance of the model
+    const campus = new Campus({
+      name, 
+      location
+    });
+
+    // Save the instance
+    const saved = await campus.save();
+
+    if(!saved){
+        (req as any).flash('error', 'Unable to create campus');
+        return res.redirect(req.get('Referrer') || '/campuses/create');
+    }        
+
     (req as any).flash('success', 'Campus created successfully');
     res.redirect('/campuses');
   } catch (err) {
@@ -64,7 +77,21 @@ export const campusesUpdate = async (req: Request, res: Response) => {
       return res.redirect(req.get('Referrer') || `/campuses/edit/${id}`);
     }
 
-    await Campus.update(id, { name, location });
+    // Create an instance of the model
+    const campus = new Campus({
+      id,
+      name, 
+      location
+    });
+
+    // Save the instance
+    const saved = await campus.save();
+
+    if(!saved){
+        (req as any).flash('error', 'Unable to save campus');
+        return res.redirect(req.get('Referrer') || '/campuses/create');
+    }    
+
     (req as any).flash('success', 'Campus updated successfully');
     res.redirect('/campuses');
   } catch (err) {

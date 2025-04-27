@@ -31,8 +31,21 @@ export const categoriesIndex = async (req: Request, res: Response) => {
         req.flash('error', 'Name is required');
         return res.redirect(req.get('Referrer') || '/categories/create');
       }
-  
-      await Category.create({ name, description });
+      
+      // Create an instance of the model
+      const category = new Category({
+        name, 
+        description
+      });
+
+      // Save the instance
+      const saved = await category.save();
+
+      if(!saved){
+        (req as any).flash('error', 'Unable to save category');
+        return res.redirect(req.get('Referrer') || '/categories/create');
+      }       
+
       req.flash('success', 'Category created successfully');
       res.redirect('/categories');
     } catch (err) {
@@ -71,8 +84,22 @@ export const categoriesIndex = async (req: Request, res: Response) => {
         req.flash('error', 'Name is required');
         return res.redirect(req.get('Referrer') || `/categories/edit/${id}`);
       }
-  
-      await Category.update(id, { name, description });
+
+      // Create an instance of the model
+      const category = new Category({
+        id,
+        name, 
+        description
+      });
+
+      // Save the instance
+      const saved = await category.save();
+
+      if(!saved){
+        (req as any).flash('error', 'Unable to updated category');
+        res.redirect(req.get('Referrer') || `/categories/edit/${req.params.id}`);
+      }  
+
       req.flash('success', 'Category updated successfully');
       res.redirect('/categories');
     } catch (err) {

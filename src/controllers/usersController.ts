@@ -22,7 +22,8 @@ export const usersIndex = async (req: Request, res: Response) => {
 
 export const usersCreateForm = async (req: Request, res: Response) => {
   const roles = await Role.getAll();
-  const employees = await Employee.getAll();
+  const employees = await Employee.getAllWithNoUser();
+
   res.render('pages/users/create', { title, roles, employees });
 };
 

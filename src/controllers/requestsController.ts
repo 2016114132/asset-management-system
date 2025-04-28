@@ -55,7 +55,7 @@ export const requestsCreateForm = async (req: Request, res: Response) => {
     const allAssets = await Asset.getAll();
     const myAssets = allAssets.filter(a => a.assigned_to === currentUser.id);
 
-    // res.send(myAssets);return;
+    // res.send(currentUser);return;
 
     res.render('pages/requests/create', {
       title,

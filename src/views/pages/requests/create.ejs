@@ -32,7 +32,7 @@
             <textarea name="description" class="form-control" rows="3" required></textarea>
           </div>
 
-          <input type="hidden" name="requested_by" value="<%= currentUser.id %>">
+          <input type="hidden" name="requested_by" value="<%= currentUser.employee_id %>">
           <div class="form-group">
             <label>Requested By</label>
             <input type="text" class="form-control" value="<%= currentUser.displayName %>" readonly>

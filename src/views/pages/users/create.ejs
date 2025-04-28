@@ -8,17 +8,17 @@
 
           <div class="form-group">
             <label>Employee <span class="text-danger">*</span></label>
-            <select name="employee_id" class="form-control" required>
+            <select id="employeeSelect" name="employee_id" class="form-control" required>
               <option value="">Select Employee</option>
               <% employees.forEach(emp => { %>
-                <option value="<%= emp.id %>"><%= emp.first_name %> <%= emp.last_name %></option>
+                <option value="<%= emp.id %>" data-email="<%= emp.email %>"><%= emp.first_name %> <%= emp.last_name %></option>
               <% }) %>
             </select>
           </div>
 
           <div class="form-group">
             <label>Email <span class="text-danger">*</span></label>
-            <input type="email" name="email" class="form-control" required>
+            <input id="emailInput" type="email" name="email" class="form-control" required>
           </div>
 
           <div class="form-group">
@@ -53,5 +53,21 @@
     </form>
   </div>
 </section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {    
+    $('#employeeSelect').on('select2:select', function (e) {
+      const selectedOption = e.params.data.element;
+      const email = $(selectedOption).data('email');
+      
+      if (email) {
+        $('#emailInput').val(email);
+      } else {
+        $('#emailInput').val('');
+      }
+    });
+  });
+</script>
+
 
 <%- include("../../partials/footer") %>

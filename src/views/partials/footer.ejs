@@ -37,6 +37,8 @@
       $('.form-control').filter('select').select2({          
           width: '100%'
       });
+
+      toastr.options.closeButton = true;
     </script>
 
     <% if (success && success.length > 0) { %>

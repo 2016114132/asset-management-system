@@ -26,6 +26,18 @@ export class Employee extends DatabaseModel implements IEmployee {
     return result.rows.map(row => new Employee(row));
   }
 
+  static async getAllWithNoUser(): Promise<Employee[]> {
+    // const result = await db.query('SELECT * FROM employees ORDER BY created_at DESC');
+    const result = await db.query(`
+      SELECT *
+      FROM employees
+      WHERE id NOT IN (SELECT employee_id FROM users WHERE employee_id IS NOT NULL)
+      ORDER BY first_name ASC
+    `);
+    
+    return result.rows.map(row => new Employee(row));
+  }
+
   static async findById(id: number): Promise<Employee | null> {
     const result = await db.query('SELECT * FROM employees WHERE id = $1', [id]);
     return result.rows[0] ? new Employee(result.rows[0]) : null;
